@@ -9,7 +9,7 @@ using MovieService.Util;
 namespace MovieService.Controllers.Movie;
 
 [ApiController]
-[Route("api/movie")]
+[Route("api-movie/movie")]
 public class MovieController : ControllerBase {
     private AppDbContext dbContext;
     private IMapper mapper;
@@ -27,7 +27,7 @@ public class MovieController : ControllerBase {
                             .Select(e => mapper.Map<GetMovieRP>(e))};
     }
 
-    [HttpGet("/{id}", Name = "GetById")]
+    [HttpGet("{id}")]
     public ActionResult<GetMovieRP> GetById([FromRoute] int id) {
         var movie = dbContext.Movies.Where(e => e.Active == true && e.Id == id).FirstOrDefault();
         if(movie == null) return NotFound();
@@ -39,10 +39,11 @@ public class MovieController : ControllerBase {
         if(! Validator.IsDateValid(newMovie.ReleaseDate)) return BadRequest();
         var movie = dbContext.Movies.Add(mapper.Map<Models.Movie>(newMovie)).Entity;
         dbContext.SaveChanges();
-        return CreatedAtRoute(nameof(GetById), new {Id = movie.Id}, movie);
+        // return CreatedAtRoute(nameof(GetById), new {Id = movie.Id}, movie); => method need name in atribute [HttpMethod]
+        return CreatedAtAction(nameof(GetById), new {Id = movie.Id}, mapper.Map<GetMovieRP>(movie));
     }
 
-    [HttpDelete("/{id}")]
+    [HttpDelete("{id}")]
     public ActionResult DeleteById([FromRoute] int id) {
         var movie = dbContext.Movies.Find(id);
         if(movie == null) return BadRequest();

@@ -10,5 +10,4 @@ public class GetMovieRP {
 
     public int DurationByMin { get; set; }
 
-    public bool Active { get; set; }
 }
