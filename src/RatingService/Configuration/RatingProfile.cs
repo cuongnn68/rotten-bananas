@@ -28,5 +28,6 @@ public class RatingProfile : Profile {
                 rating => rating.Time,
                 option => option.MapFrom(newRating => DateTime.ParseExact(newRating.Time, Const.DATE_TIME_FORMAT, null))
             );
+        CreateMap<NewMovieAS, Movie>();
     }
 }

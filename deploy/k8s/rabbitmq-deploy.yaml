@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-bus
+spec:
+  selector:
+    matchLabels:
+      app: rabbitmq-bus
+  template:
+    metadata:
+      labels:
+        app: rabbitmq-bus
+    spec:
+      containers:
+      - name: rabbitmq-bus
+        image: rabbitmq:3.9-management
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-service
+spec:
+  type: NodePort
+  selector:
+    app: rabbitmq-bus
+  ports:
+  - name: rbmq-mgmt-port
+    protocol: TCP
+    port: 15672
+    targetPort: 15672
+  - name: rbmq-msg-port
+    protocol: TCP
+    port: 5672
+    targetPort: 5672
+

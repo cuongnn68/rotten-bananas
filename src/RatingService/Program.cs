@@ -1,17 +1,24 @@
+using Confluent.Kafka;
+using Confluent.Kafka.Admin;
 using Microsoft.EntityFrameworkCore;
 using RatingService.Configuration;
 using RatingService.Models;
+using RatingService.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// create topic admin client
+CreateTopicKafka();
 
+// Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(option => option.UseInMemoryDatabase("InMemoryRating"));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddHostedService<KafkaSubcribeService>(
+    (serviceProvider) => new KafkaSubcribeService(builder.Configuration, serviceProvider));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,6 +37,19 @@ if(app.Environment.IsDevelopment()) SeedData();
 if(app.Environment.IsProduction()) DoMigration();
 
 app.Run();
+
+void CreateTopicKafka() {
+    var adminClientConfig = new AdminClientConfig() {
+        BootstrapServers = builder.Configuration["Kafka:BootstrapServer"],
+    };
+    using var adminClient = new AdminClientBuilder(adminClientConfig).Build();
+    Task.Run(() => adminClient.CreateTopicsAsync(new[] {
+        new TopicSpecification() {
+            Name = "new-movie", 
+            NumPartitions = 10, 
+            ReplicationFactor = 1},
+    }));
+}
 
 void SeedData() {
     Console.WriteLine("--> Seeding");

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieService.Configuration;
 using MovieService.Dtos;
 using MovieService.Models;
+using MovieService.Services;
 using MovieService.Util;
 
 namespace MovieService.Controllers.Movie;
@@ -13,10 +14,12 @@ namespace MovieService.Controllers.Movie;
 public class MovieController : ControllerBase {
     private AppDbContext dbContext;
     private IMapper mapper;
+    private IMessageBusService kafkaClient;
 
-    public MovieController(AppDbContext dbContext, IMapper mapper) {
+    public MovieController(AppDbContext dbContext, IMapper mapper, IMessageBusService kafkaClient) {
         this.dbContext = dbContext;
         this.mapper = mapper;
+        this.kafkaClient = kafkaClient;
     }
 
     [HttpGet]
@@ -35,12 +38,15 @@ public class MovieController : ControllerBase {
     }
 
     [HttpPost]
-    public ActionResult Add([FromBody] NewMovieRQ newMovie) {
+    async public Task<ActionResult> Add([FromBody] NewMovieRQ newMovie) {
         if(! Validator.IsDateValid(newMovie.ReleaseDate)) return BadRequest();
         var movie = dbContext.Movies.Add(mapper.Map<Models.Movie>(newMovie)).Entity;
+        await kafkaClient.AddNewMovieAsync(mapper.Map<NewMovieAS>(movie));
+        var result = CreatedAtAction(nameof(GetById), new {Id = movie.Id}, mapper.Map<GetMovieRP>(movie));
         dbContext.SaveChanges();
-        // return CreatedAtRoute(nameof(GetById), new {Id = movie.Id}, movie); => method need name in atribute [HttpMethod]
-        return CreatedAtAction(nameof(GetById), new {Id = movie.Id}, mapper.Map<GetMovieRP>(movie));
+        return result;
+        // return CreatedAtRoute(nameof(GetById), new {Id = movie.Id}, movie); // method need name in atribute [HttpMethod]
+        // return CreatedAtAction(nameof(GetById), new {Id = movie.Id}, mapper.Map<GetMovieRP>(movie)); // name of function
     }
 
     [HttpDelete("{id}")]
@@ -52,6 +58,8 @@ public class MovieController : ControllerBase {
         return Ok();
     }
 
+
+    // TODO:
     // [HttpPut("/{id}")]
 
 }

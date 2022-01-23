@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieService.Configuration;
 using AutoMapper;
 using MovieService.Models;
+using MovieService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(option => option.UseInMemoryDatabase("InMemoryMovie"));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+builder.Services.AddSingleton<IMessageBusService, KafkaPublisherService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

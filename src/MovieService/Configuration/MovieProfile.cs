@@ -12,5 +12,10 @@ public class MovieProfile : Profile {
             .ForMember(
                 dest => dest.ReleaseDate, 
                 opt => opt.MapFrom(src => DateTime.ParseExact(src.ReleaseDate, Const.DATE_FORMAT, null)));
+        CreateMap<Movie, NewMovieAS>()
+            .ForMember(
+                dest => dest.ReleaseDate,
+                opt => opt.MapFrom(src => src.ReleaseDate.ToString(Const.DATE_FORMAT))
+            );
     }
 }
