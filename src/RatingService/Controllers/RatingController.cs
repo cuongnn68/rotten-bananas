@@ -1,7 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MovieService.Util;
+using RatingService.Util;
 using RatingService.Configuration;
 using RatingService.Dtos;
 using RatingService.Models;

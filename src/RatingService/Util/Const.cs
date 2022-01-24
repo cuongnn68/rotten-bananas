@@ -1,4 +1,4 @@
-namespace MovieService.Util;
+namespace RatingService.Util;
 
 public static class Const {
     public const string DATE_FORMAT = "dd/MM/yyyy";

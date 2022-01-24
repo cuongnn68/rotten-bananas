@@ -1,4 +1,4 @@
-namespace SimpleIdentityService;
+namespace UserManagerService;
 
 public class WeatherForecast
 {

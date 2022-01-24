@@ -1,5 +1,5 @@
 using AutoMapper;
-using MovieService.Util;
+using RatingService.Util;
 using RatingService.Dtos;
 using RatingService.Models;
 
