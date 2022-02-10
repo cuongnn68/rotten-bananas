@@ -5,7 +5,6 @@ namespace UserManagerService.Models;
 
 public class User {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public string Username { get; set; }
 
     [Required]

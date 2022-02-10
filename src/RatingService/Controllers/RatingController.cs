@@ -39,9 +39,9 @@ public class RatingController : ControllerBase {
     [HttpPost]
     public ActionResult CreateRating([FromBody] NewRatingRQ newRating) {
         if(!Validator.IsDateTimeValid(newRating.Time)) return BadRequest(new ErrorRP {ErrorMessage = "Wrong time format"});
-        if(dbContext.Users.Find(newRating.UserId) is null) return BadRequest(new ErrorRP {ErrorMessage = "User not exist"});
+        if(dbContext.Users.Find(newRating.Username) is null) return BadRequest(new ErrorRP {ErrorMessage = "User not exist"});
         if(dbContext.Movies.Find(newRating.IdMovie) is null) return BadRequest(new ErrorRP {ErrorMessage = "Movie not exist"});
-        if(dbContext.Ratings.Where(r => r.IdMovie == newRating.IdMovie && r.UserId == newRating.UserId).Any()) {
+        if(dbContext.Ratings.Where(r => r.IdMovie == newRating.IdMovie && r.Username == newRating.Username).Any()) {
             return BadRequest(new ErrorRP {ErrorMessage = "User already rate movie"});
         }
         var rating = dbContext.Ratings.Add(mapper.Map<Rating>(newRating)).Entity;

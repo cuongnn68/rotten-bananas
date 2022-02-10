@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using RatingService.Configuration;
 using RatingService.Models;
 using RatingService.Service;
+using RatingService.Util;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,8 +34,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-if(app.Environment.IsDevelopment()) SeedData();
-if(app.Environment.IsProduction()) DoMigration();
+SeedData();
+DoMigration();
 
 app.Run();
 
@@ -45,9 +46,15 @@ void CreateTopicKafka() {
     using var adminClient = new AdminClientBuilder(adminClientConfig).Build();
     Task.Run(() => adminClient.CreateTopicsAsync(new[] {
         new TopicSpecification() {
-            Name = "new-movie", 
+            Name = Const.NEW_USER_TOPIC, 
             NumPartitions = 10, 
-            ReplicationFactor = 1},
+            ReplicationFactor = 1
+        },
+        new TopicSpecification() {
+            Name = Const.NEW_MOVIE_TOPIC,
+            NumPartitions = 10, 
+            ReplicationFactor = 1
+        }
     }));
 }
 
@@ -58,16 +65,17 @@ void SeedData() {
     var movies = new [] {
         new Movie{Id = 1, Name = "Tranformer", },
         new Movie{Id = 2, Name = "Dune", },
-        // new Movie{Id = 3, Name = "Spider Man", },
+        new Movie{Id = 3, Name = "Spider Man", },
     };
     var users = new [] {
-        new User{Id = 1, Username = "testuser1"},
-        new User{Id = 2, Username = "user2"},
+        new User{Username = "testuser1"},
+        new User{Username = "testuser2"},
+        new User{Username = "testuser3"},
     };
     var ratings = new [] {
-        new Rating{Id = 1, UserId = 1, IdMovie = 1, Time = DateTime.Now, Review = "boring", Score = 3},
-        new Rating{Id = 2, UserId = 1, IdMovie = 2, Time = DateTime.Now, Review = "ok", Score = 5},
-        new Rating{Id = 3, UserId = 2, IdMovie = 2, Time = DateTime.Now, Review = "good", Score = 8},
+        new Rating{Id = 1, Username = "testuser1", IdMovie = 1, Time = DateTime.Now, Review = "boring", Score = 3},
+        new Rating{Id = 2, Username = "testuser2", IdMovie = 2, Time = DateTime.Now, Review = "ok", Score = 5},
+        new Rating{Id = 3, Username = "testuser3", IdMovie = 2, Time = DateTime.Now, Review = "good", Score = 8},
     };
     if(!dbContext.Movies.Any()) dbContext.Movies.AddRange(movies);
     if(!dbContext.Users.Any()) dbContext.Users.AddRange(users);

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using UserManagerService.Configurations;
 using UserManagerService.Dtos;
 using UserManagerService.Models;
+using UserManagerService.Services;
 
 namespace UserManagerService.Controllers;
 
@@ -12,10 +13,12 @@ namespace UserManagerService.Controllers;
 public class UserInfoController : ControllerBase {
     private readonly AppDbContext dbContext;
     private readonly IMapper mapper;
+    private readonly KafkaProducerService kafkaProducer;
 
-    public UserInfoController(AppDbContext dbContext, IMapper mapper) {
+    public UserInfoController(AppDbContext dbContext, IMapper mapper, KafkaProducerService kafkaProducer) {
         this.dbContext = dbContext;
         this.mapper = mapper;
+        this.kafkaProducer = kafkaProducer;
     }
 
     [HttpGet]
@@ -33,7 +36,7 @@ public class UserInfoController : ControllerBase {
     
     // register
     [HttpPost]
-    public ActionResult CreateUser([FromBody] NewUserRQ newUser) {
+    public async Task<ActionResult> CreateUserAsync([FromBody] NewUserRQ newUser) {
         // validator
         if(string.IsNullOrEmpty(newUser.Username)) return BadRequest(new ErrorRP() {ErrorMessage = "Username cant be empty or null"});
         if(string.IsNullOrEmpty(newUser.Password)) return BadRequest(new ErrorRP() {ErrorMessage = "Password cant be empty or null"});
@@ -46,6 +49,7 @@ public class UserInfoController : ControllerBase {
         var user = mapper.Map<User>(newUser);
         dbContext.Users.Add(user);
         dbContext.SaveChanges();
+        await kafkaProducer.AddNewMovieAsync(new NewUserAS{Username = user.Username});
         var result = CreatedAtAction(nameof(GetUser), new {Username = user.Username}, mapper.Map<UserRP>(user));
         return result;
 

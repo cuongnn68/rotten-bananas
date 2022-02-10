@@ -30,13 +30,14 @@ public class KafkaPublisherService : IMessageBusService{
         Console.WriteLine("sending: " + JsonSerializer.Serialize(newMovie));
     }
 
-    private void CreateTopic() {
-        var adminClientConfig = new AdminClientConfig(){
-            BootstrapServers = bootstrapServer,
-        };
-        using var adminClient = new AdminClientBuilder(adminClientConfig).Build();
-        adminClient.CreateTopicsAsync(new TopicSpecification[] {
-            new TopicSpecification() {Name = NEW_MOVIE_TOPIC, NumPartitions = 10, }
-        });
-    }
+    //// kafka publisher can auto create topic, right???
+    // private void CreateTopic() {
+    //     var adminClientConfig = new AdminClientConfig(){
+    //         BootstrapServers = bootstrapServer,
+    //     };
+    //     using var adminClient = new AdminClientBuilder(adminClientConfig).Build();
+    //     adminClient.CreateTopicsAsync(new TopicSpecification[] {
+    //         new TopicSpecification() {Name = NEW_MOVIE_TOPIC, NumPartitions = 10, }
+    //     });
+    // }
 }

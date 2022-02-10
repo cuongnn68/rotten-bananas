@@ -29,8 +29,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-if (app.Environment.IsDevelopment()) SeedData();
-if (app.Environment.IsProduction()) DoMigration();
+SeedData();
+DoMigration();
 
 app.Run();
 

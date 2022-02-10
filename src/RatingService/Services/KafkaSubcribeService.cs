@@ -5,6 +5,7 @@ using Confluent.Kafka.Admin;
 using RatingService.Configuration;
 using RatingService.Dtos;
 using RatingService.Models;
+using RatingService.Util;
 
 namespace RatingService.Service;
 
@@ -33,7 +34,7 @@ public class KafkaSubcribeService : BackgroundService {
         //     new TopicSpecification() {Name = "movie-new", NumPartitions = 10, ReplicationFactor = 1},
         // });
         this.consumer = new ConsumerBuilder<string, string>(consumerConfig).Build();
-        consumer.Subscribe("new-movie");
+        consumer.Subscribe(new[] {Const.NEW_MOVIE_TOPIC, Const.NEW_USER_TOPIC});
         if(consumer.Handle.IsInvalid) {};
 
         Console.WriteLine("--- created background service ---");
@@ -43,10 +44,16 @@ public class KafkaSubcribeService : BackgroundService {
         await Task.Yield(); // TODO: ???
         while(! stoppingToken.IsCancellationRequested) {
             var result = consumer.Consume(stoppingToken);
-            var newMovie = JsonSerializer.Deserialize<NewMovieAS>(result.Message.Value);
             Console.WriteLine(result.Value);
-            dbContext.Movies.Add(mapper.Map<Movie>(newMovie));
-            dbContext.SaveChanges();
+            if(result.Topic == Const.NEW_MOVIE_TOPIC) {
+                var newMovie = JsonSerializer.Deserialize<NewMovieAS>(result.Message.Value);
+                dbContext.Movies.Add(mapper.Map<Movie>(newMovie));
+            }
+            if(result.Topic == Const.NEW_USER_TOPIC) {
+                var newUser = JsonSerializer.Deserialize<User>(result.Message.Value);
+                dbContext.Users.Add(newUser);
+            }
+            dbContext.SaveChanges();    
             
         }
     }

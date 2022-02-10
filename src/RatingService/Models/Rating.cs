@@ -20,6 +20,6 @@ public class Rating {
     public Movie Movie { get; set; }
 
     [ForeignKey("User")]
-    public int UserId { get; set; }
+    public string Username { get; set; }
     public User User { get; set; }
 }

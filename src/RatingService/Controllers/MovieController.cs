@@ -19,7 +19,7 @@ public class MovieController : ControllerBase {
     
     [HttpGet("{id}/rating")]
     public ActionResult<MovieRatingsRP> GetRatings([FromRoute] int id) {
-        if(dbContext.Movies.Find(id) == null) return BadRequest();
+        if(dbContext.Movies.Find(id) == null) return BadRequest(new {Error = "movie not exist"});
 
         // var movie = dbContext.Ratings.Include(r => r.Movie)
         //                              .Include(r => r.User)
