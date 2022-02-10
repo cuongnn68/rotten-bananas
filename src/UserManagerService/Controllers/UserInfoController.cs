@@ -9,7 +9,7 @@ using UserManagerService.Services;
 namespace UserManagerService.Controllers;
 
 [ApiController]
-[Route("user")]
+[Route("api-user/user")]
 public class UserInfoController : ControllerBase {
     private readonly AppDbContext dbContext;
     private readonly IMapper mapper;

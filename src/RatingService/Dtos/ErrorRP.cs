@@ -7,6 +7,6 @@ namespace RatingService.Dtos
 {
     public class ErrorRP
     {
-        public string ErrorMessage { get; set; }
+        public string ErrorMessage { get; set; } = "Error";
     }
 }
