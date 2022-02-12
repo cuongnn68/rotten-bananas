@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-manager-service-deployment
+  name: rating-service-deployment
 spec:
   selector:
     matchLabels:
-      app: user-manager-service
+      app: rating-service
   template:
     metadata:
       labels:
-        app: user-manager-service
+        app: rating-service
     spec:
       containers:
-      - name: user-manager-service
-        image: rottenbananas.azurecr.io/user-manager-service:release
+      - name: rating-service
+        image: rottenbananas.azurecr.io/rating-service:release
         resources:
           limits:
             memory: "128Mi"
@@ -28,14 +28,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: user-manager-service
+  name: rating-service
 spec:
   type: NodePort
   selector:
-    app: user-manager-service
+    app: rating-service
   ports:
   - name: http-port
     protocol: TCP
     port: 80
     targetPort: 80
-    nodePort: 30083
+    nodePort: 30081
+

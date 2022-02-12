@@ -7,7 +7,7 @@ using RatingService.Dtos;
 namespace RatingService.Controllers;
 
 [ApiController]
-[Route("api-rating/movie")]
+[Route("api/movie")]
 public class MovieController : ControllerBase {
     private readonly AppDbContext dbContext;
     private readonly IMapper mapper;

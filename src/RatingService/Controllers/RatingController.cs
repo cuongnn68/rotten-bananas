@@ -9,7 +9,7 @@ using RatingService.Models;
 namespace RatingService.Controllers;
 
 [ApiController]
-[Route("api-rating/rating")]
+[Route("api/rating")]
 public class RatingController : ControllerBase {
     private AppDbContext dbContext;
     private IMapper mapper;

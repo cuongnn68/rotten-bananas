@@ -10,7 +10,7 @@ using MovieService.Util;
 namespace MovieService.Controllers.Movie;
 
 [ApiController]
-[Route("api-movie/movie")]
+[Route("api/movie")]
 public class MovieController : ControllerBase {
     private AppDbContext dbContext;
     private IMapper mapper;

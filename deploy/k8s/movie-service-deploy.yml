@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-manager-service-deployment
+  name: movie-service-deployment
 spec:
   selector:
     matchLabels:
-      app: user-manager-service
+      app: movie-service
   template:
     metadata:
       labels:
-        app: user-manager-service
+        app: movie-service
     spec:
       containers:
-      - name: user-manager-service
-        image: rottenbananas.azurecr.io/user-manager-service:release
+      - name: movie-service
+        image: rottenbananas.azurecr.io/movie-service:release
         resources:
           limits:
             memory: "128Mi"
@@ -28,14 +28,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: user-manager-service
+  name: movie-service
 spec:
   type: NodePort
   selector:
-    app: user-manager-service
+    app: movie-service
   ports:
   - name: http-port
     protocol: TCP
     port: 80
     targetPort: 80
-    nodePort: 30083
+    nodePort: 30082
+
+

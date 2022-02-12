@@ -40,11 +40,13 @@ DoMigration();
 app.Run();
 
 void CreateTopicKafka() {
+    Console.WriteLine(" ==> Creating topic ...");
     var adminClientConfig = new AdminClientConfig() {
         BootstrapServers = builder.Configuration["Kafka:BootstrapServer"],
     };
     using var adminClient = new AdminClientBuilder(adminClientConfig).Build();
-    Task.Run(() => adminClient.CreateTopicsAsync(new[] {
+
+    var task = adminClient.CreateTopicsAsync(new[] {
         new TopicSpecification() {
             Name = Const.NEW_USER_TOPIC, 
             NumPartitions = 10, 
@@ -55,11 +57,19 @@ void CreateTopicKafka() {
             NumPartitions = 10, 
             ReplicationFactor = 1
         }
-    }));
+    });
+    try{
+        task.Wait();
+    } catch (Exception e) {
+        Console.WriteLine(e.StackTrace);
+    }
+    Console.WriteLine($"create topic status: {task.Status}");
+
+    Console.WriteLine(" ==> Created topic");
 }
 
 void SeedData() {
-    Console.WriteLine("--> Seeding");
+    Console.WriteLine("==> Seeding ...");
     using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetService<AppDbContext>();
     var movies = new [] {
@@ -81,7 +91,7 @@ void SeedData() {
     if(!dbContext.Users.Any()) dbContext.Users.AddRange(users);
     if(!dbContext.Ratings.Any()) dbContext.Ratings.AddRange(ratings);
     dbContext.SaveChanges();
-    Console.WriteLine("--> Seed");
+    Console.WriteLine("==> Seed");
 }
 
 void DoMigration() {

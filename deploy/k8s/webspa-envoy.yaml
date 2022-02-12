@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-manager-service-deployment
+  name: webspa-envoy-depl
 spec:
   selector:
     matchLabels:
-      app: user-manager-service
+      app: webspa-envoy
   template:
     metadata:
       labels:
-        app: user-manager-service
+        app: webspa-envoy
     spec:
       containers:
-      - name: user-manager-service
-        image: rottenbananas.azurecr.io/user-manager-service:release
+      - name: webspa-envoy
+        image: rottenbananas.azurecr.io/webspa-envoy:release
         resources:
           limits:
             memory: "128Mi"
@@ -28,14 +28,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: user-manager-service
+  name: webspa-envoy-service
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
-    app: user-manager-service
+    app: webspa-envoy
   ports:
   - name: http-port
-    protocol: TCP
     port: 80
     targetPort: 80
-    nodePort: 30083
+  - name: admin-port
+    port: 9901
+    targetPort: 9901
+

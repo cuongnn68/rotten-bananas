@@ -13,10 +13,10 @@ public class KafkaSubcribeService : BackgroundService {
     private readonly IConsumer<string, string> consumer;
     private readonly AppDbContext dbContext;
     private readonly IMapper mapper;
-    private readonly IAdminClient adminClient;
+    // private readonly IAdminClient adminClient;
 
     public KafkaSubcribeService(IConfiguration config, IServiceProvider serviceProvider) {
-        Console.WriteLine("--- create background service ---");
+        Console.WriteLine(" ==> creating kafka subcriber service ...");
         var scopeServiceProvider = serviceProvider.CreateScope().ServiceProvider;
         this.dbContext = scopeServiceProvider.GetService<AppDbContext>();
         this.mapper = scopeServiceProvider.GetService<IMapper>();
@@ -28,6 +28,7 @@ public class KafkaSubcribeService : BackgroundService {
             BootstrapServers = config["Kafka:BootstrapServer"],
             GroupId = config["Kafka:GroupId"],
             AllowAutoCreateTopics = true,
+            
         };
         // using var adminClient = new AdminClientBuilder(adminClientConfig).Build();
         // adminClient.CreateTopicsAsync(new[] {
@@ -35,9 +36,9 @@ public class KafkaSubcribeService : BackgroundService {
         // });
         this.consumer = new ConsumerBuilder<string, string>(consumerConfig).Build();
         consumer.Subscribe(new[] {Const.NEW_MOVIE_TOPIC, Const.NEW_USER_TOPIC});
-        if(consumer.Handle.IsInvalid) {};
+        if(consumer.Handle.IsInvalid) {}; // TODO: ?
 
-        Console.WriteLine("--- created background service ---");
+        Console.WriteLine(" ==> created kafka subcriber service");
     }
 
     protected async override Task ExecuteAsync(CancellationToken stoppingToken) {
@@ -48,12 +49,15 @@ public class KafkaSubcribeService : BackgroundService {
             if(result.Topic == Const.NEW_MOVIE_TOPIC) {
                 var newMovie = JsonSerializer.Deserialize<NewMovieAS>(result.Message.Value);
                 dbContext.Movies.Add(mapper.Map<Movie>(newMovie));
+                dbContext.SaveChanges();
+                Console.WriteLine($" ==> new movie: {result.Message.Value}");
             }
             if(result.Topic == Const.NEW_USER_TOPIC) {
                 var newUser = JsonSerializer.Deserialize<User>(result.Message.Value);
                 dbContext.Users.Add(newUser);
+                dbContext.SaveChanges();    
+                Console.WriteLine($" ==> new uesr: {result.Message.Value}");
             }
-            dbContext.SaveChanges();    
             
         }
     }

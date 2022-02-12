@@ -21,7 +21,7 @@ spec:
             memory: 1Gi
             cpu: "1"
         ports:
-        - containerPort: 30092
+        - containerPort: 9092
         env:
         - name: ALLOW_PLAINTEXT_LISTENER
           value: "yes"
