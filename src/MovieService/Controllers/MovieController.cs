@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieService.Configuration;
@@ -20,6 +21,22 @@ public class MovieController : ControllerBase {
         this.dbContext = dbContext;
         this.mapper = mapper;
         this.kafkaClient = kafkaClient;
+    }
+
+    [HttpGet("test")]
+    [Authorize]
+    public IActionResult Test() {
+        return Ok();
+    }
+    [HttpGet("username")]
+    [Authorize("username")]
+    public IActionResult Username() {
+        return Ok();
+    }
+    [HttpGet("admin")]
+    [Authorize("admin")]
+    public IActionResult Admin() {
+        return Ok();
     }
 
     [HttpGet]

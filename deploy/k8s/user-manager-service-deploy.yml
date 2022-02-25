@@ -20,6 +20,12 @@ spec:
             cpu: "500m"
         ports:
         - containerPort: 80
+        env:
+        - name: SECRET_KEY
+          valueFrom: 
+            secretKeyRef:             
+              name: general-secret
+              key: secret-key
       imagePullSecrets:
       - name: regcred
 

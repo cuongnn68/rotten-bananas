@@ -46,6 +46,12 @@ static_resources:
                   auto_host_rewrite: true
                   prefix_rewrite: "/api/"
                   cluster: user-manager-service
+              - name: "web-spa"
+                match:
+                  prefix: "/"
+                route:
+                  auto_host_rewrite: true
+                  cluster: web-spa-service
           http_filters:
           - name: envoy.filters.http.router
   clusters:
@@ -87,4 +93,17 @@ static_resources:
             address:
               socket_address:
                 address: user-manager-service
+                port_value: 80
+  - name: web-spa-service
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: web-spa-service
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: web-spa-service
                 port_value: 80

@@ -16,4 +16,6 @@ public class User {
     [Required]
     public byte[] Salt { get; set; }
 
+    public string Admin { get; set; }
+
 }

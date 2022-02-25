@@ -3,6 +3,7 @@ using MovieService.Configuration;
 using AutoMapper;
 using MovieService.Models;
 using MovieService.Services;
+using MovieService.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(option => option.UseInMemoryDatabase("InMemoryMovie"));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddSingleton<IMessageBusService, KafkaPublisherService>();
+builder.Services.AddCustomAuth();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -25,6 +29,9 @@ if (app.Environment.IsDevelopment()) {
 
 // app.UseHttpsRedirection();
 
+app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
@@ -52,3 +59,4 @@ void SeedData() {
 void DoMigration() {
 
 }
+

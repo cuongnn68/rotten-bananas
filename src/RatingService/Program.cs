@@ -1,6 +1,7 @@
 using Confluent.Kafka;
 using Confluent.Kafka.Admin;
 using Microsoft.EntityFrameworkCore;
+using RatingService.Auth;
 using RatingService.Configuration;
 using RatingService.Models;
 using RatingService.Service;
@@ -20,6 +21,8 @@ builder.Services.AddDbContext<AppDbContext>(option => option.UseInMemoryDatabase
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHostedService<KafkaSubcribeService>(
     (serviceProvider) => new KafkaSubcribeService(builder.Configuration, serviceProvider));
+builder.Services.AddCustomAuth();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,7 +32,8 @@ if (app.Environment.IsDevelopment()) {
 }
 
 // app.UseHttpsRedirection();
-
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

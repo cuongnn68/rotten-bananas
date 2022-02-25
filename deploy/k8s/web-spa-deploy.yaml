@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webspa-envoy-depl
+  name: web-spa-deployment
 spec:
   selector:
     matchLabels:
-      app: webspa-envoy
+      app: web-spa 
   template:
     metadata:
       labels:
-        app: webspa-envoy
+        app: web-spa 
     spec:
       containers:
-      - name: webspa-envoy
-        image: rottenbananas.azurecr.io/webspa-envoy:release
+      - name: web-spa
+        image: rottenbananas.azurecr.io/web-spa:release
         resources:
           limits:
             memory: "128Mi"
@@ -28,16 +28,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: webspa-envoy-service
+  name: web-spa-service
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
-    app: webspa-envoy
+    app: web-spa 
   ports:
   - name: http-port
     port: 80
     targetPort: 80
-  - name: admin-port
-    port: 9901
-    targetPort: 9901
-
+    nodePort: 30085

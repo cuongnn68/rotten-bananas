@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using AutoMapper;
 using UserManagerService.Dtos;
 using UserManagerService.Models;
@@ -13,5 +14,6 @@ public class AppProfile : Profile {
                                         option => option.MapFrom(newUser => PasswordUtil.Hash(newUser.Password, newUser.Salt))
                                     );
         CreateMap<User, UserRP>();
+        CreateMap<Claim, ClaimRP>();
     }
 }
