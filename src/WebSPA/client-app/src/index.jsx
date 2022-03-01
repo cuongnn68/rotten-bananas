@@ -4,12 +4,10 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Expenses from "./pages/expenses.js";
-import Invoices from "./pages/invoices.js";
-import Invoice from './pages/invoise.js';
 import HomePage from './components/home/HomePage';
 import MoviePage from './components/movie/MoviePage';
 import SearchPage from './components/search/searchPage';
+import LoginPage from "./components/login/LoginPage";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -20,6 +18,7 @@ ReactDOM.render(
           <Route path="home" element={<HomePage />}/>
           <Route path="movie" element={<MoviePage />} />
           <Route path="search" element={<SearchPage />} />
+          <Route path="login" element={<LoginPage />} />
         </Route>
         <Route path="*" element={"Page not found"}/>
       </Routes>

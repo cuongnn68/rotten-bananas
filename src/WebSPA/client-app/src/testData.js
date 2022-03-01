@@ -1,42 +1,44 @@
-let invoices = [
-  {
-    name: "Santa Monica",
-    number: 1995,
-    amount: "$10,800",
-    due: "12/05/1995",
-  },
-  {
-    name: "Stankonia",
-    number: 2000,
-    amount: "$8,000",
-    due: "10/31/2000",
-  },
-  {
-    name: "Ocean Avenue",
-    number: 2003,
-    amount: "$9,500",
-    due: "07/22/2003",
-  },
-  {
-    name: "Tubthumper",
-    number: 1997,
-    amount: "$14,000",
-    due: "09/01/1997",
-  },
-  {
-    name: "Wide Open Spaces",
-    number: 1998,
-    amount: "$4,600",
-    due: "01/27/1998",
-  },
-];
+export default function getMovie() {return movies;}
 
-export function getInvoices() {
-  return invoices;
-}
-
-export function getInvoice(number) {
-  return invoices.find(
-    (invoice) => invoice.number === number
-  );
-}
+let movies = [
+  {
+      id: 1,
+      imageUrl: "https://picsum.photos/225/320",
+      title: "Lorem",
+      dateRelease: "11/11/1111",
+      duration: 120,
+      plot: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean volutpat vel nunc in interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean volutpat vel nunc in interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean volutpat vel nunc in interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean volutpat vel nunc in interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean volutpat vel nunc in interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean volutpat vel nunc in interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean volutpat vel nunc in interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean volutpat vel nunc in interdum. ",
+  },
+  {
+      id: 2,
+      imageUrl: "https://picsum.photos/225/320",
+      title: "Lorem",
+      dateRelease: "11/11/1111",
+      duration: 120,
+      plot: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean volutpat vel nunc in interdum. ",
+  },
+  {
+      id: 3,
+      imageUrl: "https://picsum.photos/225/320",
+      title: "Lorem",
+      dateRelease: "11/11/1111",
+      duration: 120,
+      plot: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean volutpat vel nunc in interdum. ",
+  },
+  {
+      id: 4,
+      imageUrl: "https://picsum.photos/225/320",
+      title: "Lorem",
+      dateRelease: "11/11/1111",
+      duration: 120,
+      plot: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean volutpat vel nunc in interdum. ",
+  },
+  {
+      id: 5,
+      imageUrl: "https://picsum.photos/225/320",
+      title: "Lorem",
+      dateRelease: "11/11/1111",
+      duration: 120,
+      plot: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean volutpat vel nunc in interdum. ",
+  },
+]
