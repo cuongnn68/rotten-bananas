@@ -1,0 +1,8 @@
+WebServer/bin/
+WebServer/obj/
+WebServer/.vscode/
+WebServer/.git/
+
+client-app/node_modules/
+client-app/build/
+client-app/README.md

@@ -1,0 +1,24 @@
+.Card {
+  display: flex;
+  flex-direction: row;
+
+  height: 5cm;
+  width: 100%;
+  max-width: 30cm;
+}
+
+.Movie-image {
+  height: 100%;
+  width: auto;
+}
+
+.Movie-info {
+  display: flex;
+  flex-direction: column;
+  background-color: black;
+  color: white;
+  padding: 0.5cm;
+  overflow: hidden;
+  flex-grow: 1;
+  user-select: none;
+}
