@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rating-service-deployment
+spec:
+  selector:
+    matchLabels:
+      app: rating-service
+  template:
+    metadata:
+      labels:
+        app: rating-service
+    spec:
+      containers:
+      - name: rating-service
+        image: rottenbananas.azurecr.io/rating-service:release
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: regcred
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rating-service
+spec:
+  type: NodePort
+  selector:
+    app: rating-service
+  ports:
+  - name: http-port
+    protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 30081
+

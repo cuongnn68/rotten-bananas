@@ -1,0 +1,14 @@
+.Home-page {
+  display: flex;
+  flex-direction: column;
+  max-width: 20cm;
+  background-color: #484848;
+  padding: 1cm 2cm 1cm 2cm;
+}
+
+.Title-section {
+  padding: 0.2cm;
+  background-color: black;
+  color: yellow;
+  font-size: xx-large;
+}

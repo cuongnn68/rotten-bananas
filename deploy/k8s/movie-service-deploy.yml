@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movie-service-deployment
+spec:
+  selector:
+    matchLabels:
+      app: movie-service
+  template:
+    metadata:
+      labels:
+        app: movie-service
+    spec:
+      containers:
+      - name: movie-service
+        image: rottenbananas.azurecr.io/movie-service:release
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: regcred
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: movie-service
+spec:
+  type: NodePort
+  selector:
+    app: movie-service
+  ports:
+  - name: http-port
+    protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 30082
+
+
